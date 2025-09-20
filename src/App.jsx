@@ -203,9 +203,9 @@ const Portfolio = () => {
                   { icon: Github, href: "https://github.com/arpitguptagithub" },
                   {
                     icon: Linkedin,
-                    href: "https://linkedin.com/in/arpit-gupta",
+                    href: "https://www.linkedin.com/in/arpit-gupta-9482bb239/",
                   },
-                  { icon: Mail, href: "mailto:cs21b062@iittp.ac.in" },
+                  { icon: Mail, href: "mailto:arpitb.lgupta1@gmail.com" },
                 ].map((social, index) => (
                   <a
                     key={index}
