@@ -15,6 +15,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: none;
 }
 
 a {
@@ -69,4 +70,112 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* ===== Tile Grid & Glow Utilities ===== */
+
+/* Deep blue page background (optional) */
+html, body, #root {
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(37,99,235,0.10), transparent 40%),
+              linear-gradient(180deg, #0b1220 0%, #0d1426 100%);
+}
+
+/* Grid inside each card (sharp lines) */
+/* Grid lines inside card */
+.tile-grid {
+  position: relative;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Fading edges for smooth grid cut-off */
+.tile-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px; /* same as card radius */
+  background: radial-gradient(circle at center, rgba(11,17,30,0) 85%, rgba(11,17,30,1) 100%);
+  pointer-events: none;
+}
+
+
+/* Fancy gradient border that brightens on hover */
+.card-border {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden; /* clips glow/tint nicely */
+}
+.card-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  padding: 1px;                                /* border thickness */
+  background: linear-gradient(160deg, rgba(59,130,246,.55), rgba(56,189,248,.25));
+  -webkit-mask:
+     linear-gradient(#000 0 0) content-box,
+     linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;             /* hollow center */
+  pointer-events: none;
+  opacity: .55;
+  transition: opacity .25s ease;
+}
+.card-border:hover::before { opacity: 1; }
+
+/* Soft outer glow used on hover */
+.hover-glow {
+  transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
+}
+.hover-glow:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 40px rgba(59,130,246,0.18);
+}
+
+/* Blue tint overlay that fades in on hover */
+.card-tint {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(800px 300px at 50% 0%, rgba(59,130,246,.10), transparent 60%),
+              rgba(30,58,138,0.14);
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.card-border:hover .card-tint { opacity: 1; }
+
+/* Tiny glowing corner dots (purely decorative) */
+.corner-dot {
+  position: absolute; width: 6px; height: 6px; border-radius: 9999px;
+  background: rgba(59,130,246,.85);
+  box-shadow: 0 0 14px rgba(59,130,246,.85);
+}
+
+.card-grid {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(rgba(59,130,246,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: 0 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+
+/* Flip animation helpers */
+.perspective {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
