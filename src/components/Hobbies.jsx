@@ -3,40 +3,67 @@ import { ExternalLink, Tag } from "lucide-react";
 
 const BLOGS = [
   {
-    title: "Exploring Rust for Systems Programming",
-    subtitle: "Medium • Longform",
-    img: "https://source.unsplash.com/random/1200x800?rust",
+    title: "Stop Guessing Which Remote Desktop Protocol You Should Actually Use — and When",
+    subtitle: "Medium • Security Networking",
+    img: "https://miro.medium.com/v2/resize:fit:720/format:webp/1*dfo4CbzU0AzrdryyMlIvEg.png",
     excerpt:
-      "Why Rust fits security-minded systems work: ownership, zero-cost abstractions, and fearless concurrency—practical notes from real attacks & tooling.",
-    link: "https://medium.com/@arpitgupta/rust-blog",
-    tags: ["Rust", "Security", "Systems"],
+      "RDP vs VNC vs others — a breakdown of protocols, tradeoffs, and when each remote desktop solution actually makes sense.",
+    link: "https://medium.com/@arpitb.lgupta1/stop-guessing-which-remote-desktop-protocol-you-should-actually-use-and-when-79fb2998893f",
+    tags: ["RDP", "Remote Access", "Networking", "Security"],
   },
   {
-    title: "Digital Forensics: Notes from the Trenches",
-    subtitle: "Personal Blog",
-    img: "https://source.unsplash.com/random/1200x800?forensics",
+    title: "The Hidden Holes: Why Our Super-Fast Computers Have Security Problems We're Ignoring",
+    subtitle: "Medium • Security Analysis",
+    img: "https://miro.medium.com/v2/resize:fit:720/format:webp/0*h_D_8BRT3er2Ao-9",
     excerpt:
-      "Workflows that saved hours in malware triage: memory artifacts, PE quirks, and how to keep chain-of-custody clean in fast incident response.",
-    link: "https://medium.com/@arpitgupta/forensics",
-    tags: ["Forensics", "Malware", "Security"],
+      "Modern CPUs are fast but full of overlooked vulnerabilities — exploring microarchitectural risks we brush aside.",
+    link: "https://medium.com/@arpit_33734/the-hidden-holes-why-our-super-fast-computers-have-security-problems-were-ignoring-7d9ae839f40e",
+    tags: ["Security", "Hardware", "Vulnerabilities"],
   },
   {
-    title: "IoT + Cloud: A Weekend Build",
-    subtitle: "Hobby Project",
-    img: "https://source.unsplash.com/random/1200x800?iot",
+    title: "Timeless Attack Vectors: Why Cutting-Edge Browser Security Is Essential",
+    subtitle: "Medium • Browser Security",
+    img: "https://miro.medium.com/v2/resize:fit:640/format:webp/1*8X1Z5tTLD6s46jCrpAoHJQ.png",
     excerpt:
-      "Raspberry Pi, MQTT, and a tiny rules engine. What breaks first, what to harden, and a checklist before you ship hardware to the wild.",
-    link: "https://medium.com/@arpitgupta/iot-project",
-    tags: ["IoT", "Cloud", "DIY"],
+      "An overview of evolving attack vectors in modern browsers and why robust browser security is critical today.",
+    link: "https://medium.com/@arpit_33734/timeless-attack-vectors-why-cutting-edge-browser-security-is-essential-027fa887ca7a",
+    tags: ["Browser Security", "Web", "Attack Vectors"],
   },
   {
-    title: "Web Hardening Playbook",
-    subtitle: "Medium • Guide",
-    img: "https://source.unsplash.com/random/1200x800?web,security",
+    title: "Digital Clock Project",
+    subtitle: "Hardware Build • Logic Design",
+    img: "https://chiragkotian.github.io/Past_Projects/images/Digital%20clock.jpg",
     excerpt:
-      "From CSP and CORP to Signed Exchanges and tricky MIME sniffing: a pragmatic checklist you can copy into your next PR.",
-    link: "https://medium.com/@arpitgupta/web-hardening",
-    tags: ["Web", "Security"],
+      "A digital clock built with flip-flops and logic gates — blending electronics design with timing circuits.",
+    link: "https://chiragkotian.github.io/Past_Projects/Digital_Clock.html",
+    tags: ["Hardware", "Electronics", "Logic Design"],
+  },
+  {
+    title: "RC 3D-Printed Plane",
+    subtitle: "Hobby Project • RC Build",
+    img: "https://chiragkotian.github.io/Past_Projects/images/3D%20printed%20RC%20plane.jpg",
+    excerpt:
+      "A 3D-printed RC plane project combining design, electronics, and control system integration.",
+    link: "https://github.com/ChiragKotian/RC_3D-Printed_plane",
+    tags: ["RC", "3D Printing", "Electronics"],
+  },
+  {
+    title: "RC Escapade Race Car",
+    subtitle: "RC Hardware Build",
+    img: "https://chiragkotian.github.io/Past_Projects/images/rcracecar.jpg",
+    excerpt:
+      "Custom-built RC race car with custom PCB, remote control integration, and functional design for competition.",
+    link: "https://github.com/ChiragKotian/RC-Escapade-RC-race-car-/",
+    tags: ["RC", "Hardware", "PCB Design"],
+  },
+  {
+    title: "Drone _Pixhawk",
+    subtitle: "Hobby Project • Drone",
+    img: "https://chiragkotian.github.io/Past_Projects/images/firstpixhwak.png",
+    excerpt:
+      "A drone made out of recycled parts and components salvaged from older club projects.",
+    link: "https://chiragkotian.github.io/Past_Projects/Pixhawk_first_drone.html",
+    tags: ["RC", "3D Printing", "Electronics"],
   },
 ];
 
@@ -126,27 +153,18 @@ export default function Hobbies() {
                          rounded-2xl overflow-hidden border border-gray-700 bg-gray-900/40 backdrop-blur-md
                          transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400
                          hover:shadow-[0_0_30px_rgba(59,130,246,0.38)]"
-              onMouseMove={(e) => {
-                const t = e.currentTarget;
-                const r = t.getBoundingClientRect();
-                const x = ((e.clientX - r.left) / r.width - 0.5) * 6; // -3..3 deg
-                const y = ((e.clientY - r.top) / r.height - 0.5) * -6;
-                t.style.transform = `rotateX(${y}deg) rotateY(${x}deg) translateY(-4px)`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "";
-              }}
             >
-              {/* neon inner wash */}
-              <div className="absolute inset-0 pointer-events-none opacity-60 group-hover:opacity-100 transition
-                              bg-[radial-gradient(1200px_400px_at_20%_20%,rgba(59,130,246,0.08),transparent_60%),radial-gradient(800px_300px_at_80%_80%,rgba(34,211,238,0.08),transparent_60%)]" />
+              {/* animated gradient halo */}
+              <div className="absolute inset-0 pointer-events-none opacity-40 group-hover:opacity-80 transition
+                              bg-[radial-gradient(600px_400px_at_20%_20%,rgba(59,130,246,0.15),transparent_70%),radial-gradient(600px_400px_at_80%_80%,rgba(34,211,238,0.15),transparent_70%)]
+                              animate-[pulse_6s_ease-in-out_infinite]" />
 
-              {/* cover */}
-              <div className="overflow-hidden">
+              {/* cover with fixed aspect ratio */}
+              <div className="relative w-full aspect-video overflow-hidden">
                 <img
                   src={b.img}
                   alt={b.title}
-                  className="w-full h-64 object-cover opacity-90 group-hover:scale-[1.03] transition duration-500"
+                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 group-hover:opacity-100 transition duration-700"
                   loading="lazy"
                 />
               </div>
@@ -182,7 +200,7 @@ export default function Hobbies() {
                   className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-cyan-500/50 text-cyan-300 text-sm
                              hover:bg-blue-500/20 hover:shadow-[0_0_16px_rgba(59,130,246,0.45)] transition"
                 >
-                  Read on Medium <ExternalLink className="w-4 h-4" />
+                  Read More <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
             </article>

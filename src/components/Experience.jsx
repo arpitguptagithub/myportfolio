@@ -2,7 +2,7 @@ const EXPERIENCES = [
   { role: "Software Developer - Fullstack",
     company: "Kasm Workspaces",
     date:"July 2025 - Present",
-    desc: "Working on the backend and core new feature release development team.",
+    desc: "Full Stack development for the 1.18 release",
     tags: [ "Docker", "JS", "python", "Remote desktop protocols", "JWT"]
   },
 
@@ -10,7 +10,7 @@ const EXPERIENCES = [
     role: "Software Developer and Security Researcher",
     company: "Square X, Singapore",
     date: "May 2024 - June 2025",
-    desc: "Analyzed file formats (PDF, OOXML, PE) for hidden threats, developed malware analysis tooling, and co-authored 'Last Mile Reassembly Attack' (DEFCON 2024). Built custom Windows images on Azure integrating 20+ tools.",
+    desc: "Analyzed file formats (PDF, OOXML, PE) for hidden threats, developed malware analysis tooling, and co-authored 'Last Mile Reassembly Attack' (DEFCON 2024). Built custom Windows images on Azure integrating 20+ tools., Worked on security researches.",
     tags: ["Rust", "Security Research", "Azure", "Malware Analysis"],
   },
   {

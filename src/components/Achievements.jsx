@@ -2,14 +2,53 @@ const ACHIEVEMENTS = [
   {
     year: "2024",
     icon: "🔒",
-    title: "DEFCON 2024",
-    desc: "Presented groundbreaking research on Last Mile Reassembly Attack, demonstrating critical vulnerabilities in secure web gateways.",
+    title: "DEFCON - Last Mile Reassembly Attack",
+    desc: (
+      <>
+        Developed multiple <strong>attack vectors</strong> in the groundbreaking research on
+        <strong> Last Mile Reassembly Attack</strong>, demonstrating
+        <strong> critical vulnerabilities</strong> in secure web gateways.
+        <a
+          href="https://www.bing.com/ck/a?!&&p=d34a53d2037c54ed0371f800bc47b302e704b5a0589bf9ecaefe1e6430624275JmltdHM9MTc1ODQxMjgwMA&ptn=3&ver=2&hsh=4&fclid=3d1dbd00-d3f8-6248-1835-ab25d2aa6320&psq=last+mile+reassembly+attack&u=a1aHR0cHM6Ly9zZWN1cml0eWxlZGdlci5jb20vMjAyNS8wOS9wYWxvLWFsdG8tbmV0d29ya3MtYWNrbm93bGVkZ2VzLXNxdWFyZXgtcmVzZWFyY2gtb24tbGltaXRhdGlvbnMtb2Ytc3dncy1hZ2FpbnN0LWxhc3QtbWlsZS1yZWFzc2VtYmx5LWF0dGFja3MvIzp-OnRleHQ9TGFzdCUyME1pbGUlMjBSZWFzc2VtYmx5JTIwYXR0YWNrcyUyMGFyZSUyMGElMjBjbGFzcyUyMG9mLHRlY2huaXF1ZSUyQyUyMGF0dGFja2VycyUyMGJyZWFrJTIwdGhlJTIwbWFsd2FyZSUyMGludG8lMjBkaWZmZXJlbnQlMjBjaHVua3Mu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 hover:underline ml-1"
+        >
+          [Reference]
+        </a>
+      </>
+    ),
     stats: [
       { label: "Vulnerabilities Found", value: "25+" },
       { label: "Impact Score", value: "9.8/10" },
+      { label: "Recognized Attack" , value: "Pablo Alto Networks" }
     ],
     tags: ["Security Research", "Web Security", "Vulnerability Analysis"],
   },
+
+  {
+    year: "2025",
+    icon: "🧩",
+    title: "Polymorphic Extension",
+    desc: (
+      <>
+        Created the groundbreaking <strong>Polymorphic Browser Extension</strong>, showcased in widely viewed demos
+        (<a href="https://youtu.be/oWtR8vqbYX4?si=3D64MNQZmoq6WmoP"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 hover:underline">
+          Matt Johnson’s top video
+        </a>).
+        Recognized as a disruptive attack vector in browser security.
+      </>
+    ),
+    stats: [
+      { label: "News Coverage", value: "100+ Press releases" },
+      { label: "Organic You tube coverage", value: "400k+ views" }
+    ],
+    tags: ["Security Research", "Browser Exploits", "Extension Security"],
+  },
+
   {
     year: "2023",
     icon: "🥇",
@@ -23,6 +62,26 @@ const ACHIEVEMENTS = [
     tags: ["IoT", "Innovation"],
   },
   {
+    year: "2025",
+    icon: "📖",
+    title: "Browser Security Field Manual",
+    desc: "My research code and demonstrations were featured in the book Browser Security Field Manual, by Audrey serving as support material for modern web security studies.",
+    stats: [],
+    tags: ["Publication", "Security Research", "Browser Security"],
+  },
+
+  {
+    year: "2025",
+    icon: "🐈",
+    title: "DEFCON Village - CopyCat Identity Stealer",
+    desc: "Coded more than 8 out of 10 vectors in the CopyCat Identity Stealer Extension at DEFCON 33 Villages, exposing new methods of identity theft via browser extensions.",
+    stats: [
+      { label: "Event", value: "DEFCON 33" },
+    ],
+    tags: ["Security Research", "Browser Exploits", "DEFCON"],
+  },
+
+  {
     year: "2024",
     icon: "🏆",
     title: "Hackbells Global Winner",
@@ -34,6 +93,74 @@ const ACHIEVEMENTS = [
     ],
     tags: ["Security", "Development"],
   },
+
+  {
+    year: "2025",
+    icon: "🔒",
+    title: "Browser Synjacking Attack",
+    desc: "Developed a novel browser-based attack exploiting synchronization features to steal sensitive account data. Widely covered in security press.",
+    stats: [
+      { label: "Press Articles", value: "100+" },
+    ],
+    tags: ["Security Research", "JS", "Python", "Native Messaging", "Chrome Extension"],
+  },
+
+  {
+    year: "2025",
+    icon: "🔓",
+    title: "RSA Conference – Data Splicing Attacks",
+    desc: "SquareX highlighted my team research on data splicing attacks at RSA 2025, bringing attention to new risks in browser and web application security.",
+    stats: [
+      { label: "Conference", value: "RSA 2025" },
+      { label: "Month", value: "April" },
+    ],
+    tags: ["Security Research", "Conference", "Data Splicing"],
+  },
+
+  {
+    year: "2024",
+    icon: "💧",
+    title: "Indo-Canada International Water Symposium",
+    desc: "Presented research on water management and conservation with machine learning approaches, achieving top recognition.",
+    stats: [
+      { label: "Position", value: "1st" },
+    ],
+    tags: ["Research", "Water Management", "Conservation", "ML Algorithms"],
+  },
+
+  {
+    year: "2023",
+    icon: "🚗",
+    title: "RC Escapade 2023",
+    stats: [
+      { label: "Position", value: "1st" },
+    ],
+    desc: "Engineered a fully functional RC car from scratch with custom PCB design and remote-control system for annual racing competition.",
+    tags: ["Hardware", "PCB Design", "RC Systems"],
+  },
+  {
+    year: "2023",
+    icon: "🚀",
+    title: "Shaashthra, CIS – Space Debris Management",
+    stats: [
+      { label: "Position", value: "2nd" },
+    ],
+    desc: "Presented a novel solution leveraging ML and AI to tackle space debris management challenges at IIT Madras.",
+    tags: ["Space Debris", "ML", "AI"],
+  },
+
+  {
+    year: "2022",
+    icon: "🧺",
+    title: "Smart Laundry Innovation Challenge",
+    desc: "Created an IoT-based solution for automated laundry management with real-time tracking, analytics, and payment integration.",
+    stats: [
+      { label: "Innovation Score", value: "9.5/10" },
+      { label: "Position", value: "1st" },
+    ],
+    tags: ["IoT", "Python", "Flutter", "MongoDB"],
+  },
+
 ];
 
 export default function Achievements() {
@@ -79,7 +206,7 @@ export default function Achievements() {
 
                 {/* stats */}
                 <div className="grid grid-cols-2 gap-3 mt-4">
-                  {a.stats.map((s, i) => (
+                  {a.stats?.map((s, i) => (
                     <div
                       key={i}
                       className="bg-gray-800/60 rounded-lg p-3 text-center transition transform

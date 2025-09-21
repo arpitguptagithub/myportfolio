@@ -3,6 +3,6 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  // no base here for local dev
+    base: "/my-portfolio/", // remove base for local dev
 });
 

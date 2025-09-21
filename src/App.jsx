@@ -39,8 +39,8 @@ export default function App() {
         <Experience />
         <Projects />
         <Achievements />
-        <Skills />
         <Hobbies />
+        <Skills />
         <Footer />
       </div>
     </div>

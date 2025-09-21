@@ -16,7 +16,7 @@ const CATEGORIES = [
     {
         title: "Cloud & DevOps",
         icon: Cloud,
-        skills: ["GCP", "AWS", "Azure", "Docker", "Kubernetes"],
+        skills: ["GCP", "AWS", "Azure", "Docker", "Kubernetes", "Terraform"],
     },
     {
         title: "Databases",

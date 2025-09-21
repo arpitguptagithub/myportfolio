@@ -26,8 +26,8 @@ export default function Hero() {
           <h1 className="text-4xl md:text-5xl font-bold leading-tight">
             <ReactTyped
               strings={["Hi, I am Arpit"]}
-              typeSpeed={70}
-              backSpeed={40}
+              typeSpeed={200}
+              backSpeed={70}
               showCursor={true}
             />
           </h1>

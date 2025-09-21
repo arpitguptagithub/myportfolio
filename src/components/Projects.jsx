@@ -9,30 +9,44 @@ const PROJECTS = [
   {
     title: "Last Mile Reassembly Attack",
     subtitle: "DEFCON 2024 - Security Research",
-    img: "https://source.unsplash.com/random/800x600?cybersecurity",
-    desc: "Research presented at DEFCON 2024 demonstrating vulnerabilities in secure web gateways. Built using Rust for PE and PDF analysis.",
-    link: "https://github.com/arpitguptagithub/last-mile",
+    img: "https://sqrx.com/static/img/lmr/where-swgs-fail.png",
+    desc: "Research presented at DEFCON 2024 demonstrating vulnerabilities in secure web gateways.",
+    link: "https://www.youtube.com/watch?v=mBZQnJ1MWYI", 
   },
   {
-    title: "IIT Convocation App",
-    subtitle: "IIT Tirupati - Mobile App",
-    img: "https://source.unsplash.com/random/800x600?mobileapp",
-    desc: "Developed the official convocation ceremony app for IIT Tirupati using Flutter and Firebase.",
-    link: "https://github.com/arpitguptagithub/convocation-app",
+    title: "Polymorphic Extensions Attack",
+    subtitle: "SquareX Research - Browser Extensions Exploit",
+    img: "https://tse2.mm.bing.net/th/id/OIP.TxfFv2s3noRC_EIg494iHgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+    desc: "Developed a polymorphic browser extension attack that impersonates legitimate extensions (icons, UI), tricking users into entering credentials. Disclosed by SquareX (see official blog).",
+    link: "https://sqrx.com/polymorphic-extensions", 
+  },
+  {
+    title: "Copycat Identity Stealer",
+    subtitle: "DEF CON 33 - Extension Toolkit",
+    img: "https://i0.wp.com/undercodenews.com/wp-content/uploads/Demo-Labs_SquareX.png?resize=1024%2C614&ssl=1",
+    desc: "Browser extension-based red-team toolkit for simulating identity theft attacks; includes phishing via Gmail/LinkedIn, login + OTP stealing, autofill extraction. Presented at DEF CON 33.",
+    link: "https://infocondb.org/con/def-con/def-con-33/copycat-identity-stealer-extension",
+  },
+  {
+    title: "Browser Synjacking Attack",
+    subtitle: "2025 - Security Research",
+    img: "https://tse4.mm.bing.net/th/id/OIP.oob7cDRRAZX2uvqrHv9BCwHaEc?rs=1&pid=ImgDetMain&o=7&rm=3",
+    desc: "Novel browser-based attack exploiting synchronization features to steal sensitive account data across multiple sessions/devices. Widely covered in security press.",
+    link: "https://www.forbes.com/sites/alexvakulov/2025/01/31/new-browser-syncjacking-attack-gives-hackers-full-device-control/", 
   },
   {
     title: "Smart Laundry System",
     subtitle: "IoT + Cloud Project",
-    img: "https://source.unsplash.com/random/800x600?iot",
-    desc: "IoT-based laundry management system integrating washing machines with cloud services and real-time usage tracking.",
-    link: "https://github.com/arpitguptagithub/laundry-system",
+    img: "https://www.lg.com/eastafrica/images/WM/features/WM-SapienceHEDD-BlackSteel-11-1-SmartThinQ-Desktop_new.jpg",
+    desc: "IoT-based laundry management system integrating washing machines with cloud backend, real-time usage tracking, and payment gateway.",
+    link: "#",
   },
   {
-    title: "IIT Tirupati Website",
-    subtitle: "Institute Website Revamp",
-    img: "https://source.unsplash.com/random/800x600?website",
-    desc: "Redesigned the official website for IIT Tirupati with a modern, responsive design using React and Tailwind CSS.",
-    link: "https://github.com/arpitguptagithub/iitt-website",
+    title: "Browser Security Field Manual Support Code",
+    subtitle: "Publication / Book Contribution",
+    img: "https://v.fastcdn.co/t/5979c3ac/02dfe38b/1754329472-65539895-465x363x635x537x69x83-RSAC-SquareX-Book-11.png",
+    desc: "My demos, exploit code, and attack walkthroughs are included as supporting material in the book 'Browser Security Field Manual'.",
+    link: "https://getstarted.sqrx.com/browser-security-manual#", 
   },
 ];
 
@@ -49,7 +63,7 @@ export default function Projects() {
           </span>
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
           {/* Left dynamic project details */}
           <div>
             <span className="text-sm uppercase tracking-widest text-gray-400">
@@ -62,7 +76,7 @@ export default function Projects() {
               {PROJECTS[active].desc}
             </p>
 
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-9">
               <a
                 href={PROJECTS[active].link}
                 target="_blank"
@@ -80,14 +94,14 @@ export default function Projects() {
           <div className="relative">
             <Swiper
               modules={[Navigation, Pagination]}
-              slidesPerView={3}
-              spaceBetween={20}
+              slidesPerView={2.2}
+              spaceBetween={15}
               centeredSlides={true}
               loop={true}
               navigation
               pagination={{ clickable: true }}
               onSlideChange={(swiper) => setActive(swiper.realIndex)}
-              className="pb-12"
+              className="pb-16 relative"
             >
               {PROJECTS.map((p, idx) => (
                 <SwiperSlide key={idx}>
@@ -101,13 +115,13 @@ export default function Projects() {
                     <img
                       src={p.img}
                       alt={p.title}
-                      className="w-full h-[350px] object-cover opacity-80 group-hover:opacity-100 transition"
+                      className="w-full h-[400px] object-cover opacity-80 group-hover:opacity-100 transition"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-4">
                       <span className="text-xs text-gray-300">
                         {p.subtitle}
                       </span>
-                      <h3 className="text-lg font-semibold text-blue-300">
+                      <h3 className="text-lg py-4 font-semibold text-blue-300">
                         {p.title}
                       </h3>
                     </div>
@@ -115,6 +129,20 @@ export default function Projects() {
                 </SwiperSlide>
               ))}
             </Swiper>
+            {/* style overrides */}
+<style jsx global>{`
+  .swiper-pagination {
+    bottom: -5px !important; /* push dots a bit further down */
+  }
+  .swiper-pagination-bullet {
+    background: linear-gradient(90deg, #3b82f6, #02ddffff);
+    opacity: 0.8;
+  }
+  .swiper-pagination-bullet-active {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+`}</style>
           </div>
         </div>
       </div>
