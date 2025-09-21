@@ -82,7 +82,7 @@ export default function Navbar() {
           {/* Logo + name */}
           <div className="flex items-center gap-3">
             <img
-              src="/arpit.png"
+              src="arpit.png"
               alt="Arpit"
               className="w-10 h-10 rounded-full border-2 border-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
             />
