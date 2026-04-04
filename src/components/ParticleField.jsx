@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ParticleField() {
   const canvasRef = useRef(null);
-  const [shieldState, setShieldState] = useState("vulnerable"); // vulnerable, stabilized
+  const shieldStateRef = useRef("vulnerable");
 
   useEffect(() => {
-    const handleShieldEvent = () => setShieldState("stabilized");
+    const handleShieldEvent = () => {
+      shieldStateRef.current = "deploying";
+    };
     window.addEventListener("shield-stabilized", handleShieldEvent);
     return () => window.removeEventListener("shield-stabilized", handleShieldEvent);
   }, []);
@@ -21,7 +23,7 @@ export default function ParticleField() {
 
     // --- City Data ---
     let cityColumns = [];
-    const COL_WIDTH = isMobile ? 16 : 28; // Wider for detailed buildings
+    const COL_WIDTH = isMobile ? 16 : 28; 
     let colCount = 0;
     
     // Health metrics
@@ -49,16 +51,15 @@ export default function ParticleField() {
           
           const colorVariant = Math.floor(Math.random() * 15);
           
-          // Pre-generate random window grid states for the building
           const winCols = Math.floor(COL_WIDTH / 6);
           const maxPossibleWinRows = Math.floor((height * 0.65) / 8); 
           const windowMap = Array(maxPossibleWinRows).fill(0).map(() => 
-            Array(winCols).fill(0).map(() => Math.random() > 0.5) // true = window is ON
+            Array(winCols).fill(0).map(() => Math.random() > 0.5) 
           );
 
           return {
             x: i * COL_WIDTH,
-            w: COL_WIDTH - (isMobile ? 2 : 4), // Gaps
+            w: COL_WIDTH - (isMobile ? 2 : 4), 
             maxH: maxH,
             h: maxH,
             r: 20 + colorVariant,
@@ -81,38 +82,50 @@ export default function ParticleField() {
     resize();
     window.addEventListener("resize", resize);
 
-    // Shield path for the central generator
     const shieldGeneratorPath = new Path2D("M0,0 L15,4 L15,15 C15,22 0,30 0,30 C0,30 -15,22 -15,15 L-15,4 Z");
 
-    // --- Entity Arrays ---
     let rockets = [];
     let sparks = [];
     
-    // Shield Dome variables (massively scaled to cover whole screen gently)
+    // Shield Dome variables
     const domeRadius = Math.max(width, height) * 1.5; 
     const domeCenterX = width / 2;
-    const domeCenterY = height + domeRadius - (height * 0.85); // Pushes it up so arc covers screen
+    const domeCenterY = height + domeRadius - (height * 0.85);
 
-    const isStabilized = shieldState === "stabilized";
+    // Animation states
+    let deployAnimProgress = 0;
 
     let frame = 0;
     
-    // Time scaling: 30 minutes to destroy
     const ROCKET_SPAWN_RATE = isMobile ? 8 : 4; 
     const ROCKETS_PER_SEC = 60 / ROCKET_SPAWN_RATE;
     const TARGET_TIME_SECONDS = 1800; // 30 minutes
     const DAMAGE_PER_ROCKET = maxTotalHealth / (ROCKETS_PER_SEC * TARGET_TIME_SECONDS);
 
-    // Pre-calculate green/red colors for performance
     const sageHex = "#8b9a7b";
     const sageRgb = "139, 154, 123";
     const amberRgb = "212, 165, 116";
+
+    // Easing helper
+    const easeOutQuart = (x) => 1 - Math.pow(1 - x, 4);
 
     const loop = () => {
       ctx.clearRect(0, 0, width, height);
       frame++;
 
-      const stabilizedThisFrame = shieldState === "stabilized";
+      // Progress animation
+      const currentState = shieldStateRef.current;
+      if (currentState === "deploying" || currentState === "stabilized") {
+         if (deployAnimProgress < 1) {
+            deployAnimProgress += 0.004; // Very slow, visible buildup ~ 4 seconds
+            if (deployAnimProgress >= 1) {
+               deployAnimProgress = 1;
+            }
+         }
+      }
+      
+      const isDeploying = deployAnimProgress > 0;
+      const isFullyStabilized = deployAnimProgress >= 1;
 
       // --- Draw City ---
       currentTotalHealth = 0;
@@ -121,23 +134,19 @@ export default function ParticleField() {
         if (col.h > 0) {
           currentTotalHealth += col.h;
           
-          // Draw building base structure (silhouette)
           ctx.beginPath();
           ctx.rect(col.x, height - col.h, col.w, col.h);
           ctx.fillStyle = `rgb(${col.r}, ${col.g}, ${col.b})`;
           ctx.fill();
 
-          // Draw Antenna
           if (col.antenna > 0) {
              ctx.beginPath();
-             // Antenna sits on top of current height
              ctx.moveTo(col.x + col.w / 2, height - col.h);
              ctx.lineTo(col.x + col.w / 2, height - col.h - col.antenna);
              ctx.strokeStyle = `rgb(${col.r}, ${col.g}, ${col.b})`;
              ctx.lineWidth = 2;
              ctx.stroke();
 
-             // Blinking red light on antenna
              if (frame % 60 < 30) {
                 ctx.beginPath();
                 ctx.arc(col.x + col.w / 2, height - col.h - col.antenna, 1.5, 0, Math.PI*2);
@@ -146,32 +155,34 @@ export default function ParticleField() {
              }
           }
           
-          // Draw Detail Grid (Windows)
-          // Only draw windows inside the current existing height
           const winRows = Math.floor(col.h / 8); 
           const winPaddingX = 2;
           const winW = (col.w - (winPaddingX * 2)) / col.winCols;
           
           for (let r = 0; r < winRows; r++) {
-            // Check maxPossible rows safety
             if (r >= col.windows.length) continue; 
             const yPos = height - (r * 8) - 6;
 
             for (let c = 0; c < col.winCols; c++) {
                if (col.windows[r][c]) {
-                 // Random flicker
                  if (Math.random() > 0.995) col.windows[r][c] = false; 
 
                  ctx.beginPath();
                  ctx.rect(col.x + winPaddingX + (c * winW) + 1, yPos, winW - 2, 4);
                  
-                 // Color window based on shield state
-                 if (stabilizedThisFrame) {
-                    ctx.fillStyle = `rgba(${sageRgb}, ${Math.random() * 0.1 + 0.3})`;
+                 // Pseudo-random but deterministic opacity based on row/col
+                 const staticRand = (r * 13 + c * 7) % 10 / 10;
+                 
+                 // If deploying, city lights transition to green based on progress
+                 if (isDeploying) {
+                    ctx.fillStyle = `rgba(${sageRgb}, ${(staticRand * 0.2 + 0.3) * deployAnimProgress})`;
+                    ctx.fill();
+                    ctx.fillStyle = `rgba(${amberRgb}, ${(staticRand * 0.2 + 0.2) * (1 - deployAnimProgress)})`;
+                    ctx.fill();
                  } else {
-                    ctx.fillStyle = `rgba(${amberRgb}, ${Math.random() * 0.1 + 0.2})`;
+                    ctx.fillStyle = `rgba(${amberRgb}, ${staticRand * 0.2 + 0.2})`;
+                    ctx.fill();
                  }
-                 ctx.fill();
                } else {
                  if (Math.random() > 0.998) col.windows[r][c] = true;
                }
@@ -180,118 +191,160 @@ export default function ParticleField() {
         }
       }
 
-      // --- Draw Generator (Small central shield) ---
-      // In the middle of the city
+      // --- Draw Generator ---
       const genX = width / 2;
       const genY = height - 60;
       
       ctx.save();
       ctx.translate(genX, genY);
-      
-      // Floating animation
       const floatY = Math.sin(frame * 0.05) * 5;
       ctx.translate(0, floatY);
-
-      // Scale up a bit
       const gScale = 1.2;
       ctx.scale(gScale, gScale);
 
       ctx.lineWidth = 1.5;
-      if (stabilizedThisFrame) {
-         ctx.strokeStyle = `rgba(${sageRgb}, 1)`;
+      
+      // Interpolate generator border
+      if (isDeploying) {
+         ctx.strokeStyle = `rgba(${sageRgb}, ${deployAnimProgress})`;
+         ctx.stroke(shieldGeneratorPath);
+         
+         ctx.strokeStyle = `rgba(239, 68, 68, ${0.8 * (1 - deployAnimProgress)})`;
+         ctx.stroke(shieldGeneratorPath);
+         
          ctx.shadowColor = sageHex;
-         ctx.shadowBlur = 15;
+         ctx.shadowBlur = 15 * deployAnimProgress;
       } else {
-         ctx.strokeStyle = `rgba(239, 68, 68, 0.8)`; // Vulnerable
+         ctx.strokeStyle = `rgba(239, 68, 68, 0.8)`; 
          ctx.shadowColor = "red";
          ctx.shadowBlur = 5;
+         ctx.stroke(shieldGeneratorPath);
       }
-      ctx.stroke(shieldGeneratorPath);
 
-      // Inner energy core
       ctx.beginPath();
       ctx.arc(0, 15, 3, 0, Math.PI*2);
-      ctx.fillStyle = stabilizedThisFrame ? sageHex : "#ef4444";
+      ctx.fillStyle = isDeploying ? sageHex : "#ef4444";
       ctx.fill();
-      
       ctx.restore();
+
+      // --- Draw Shield Dome Animation ---
+      if (isDeploying) {
+         // Phase 1 (0 to 0.3): Beam shoots up
+         const pPhase1 = Math.min(1, deployAnimProgress / 0.3);
+         const beamEase = easeOutQuart(pPhase1);
+         
+         // Phase 2 (0.3 to 1.0): Dome spreads
+         const pPhase2 = Math.max(0, deployAnimProgress - 0.3) / 0.7;
+         const spreadEase = easeOutQuart(pPhase2);
+
+         const apexY = domeCenterY - domeRadius;
+
+         // Draw Beam
+         if (pPhase1 > 0) {
+             const currentBeamExt = genY - (genY - apexY) * beamEase;
+             ctx.beginPath();
+             ctx.moveTo(genX, genY + floatY);
+             ctx.lineTo(genX, currentBeamExt);
+             const beamGrad = ctx.createLinearGradient(0, genY, 0, apexY);
+             // Beam pulses intensity
+             const beamInt = Math.sin(frame * 0.5) * 0.2 + 0.8;
+             beamGrad.addColorStop(0, `rgba(${sageRgb}, ${0.8 * beamInt})`);
+             beamGrad.addColorStop(1, `rgba(${sageRgb}, 0.0)`);
+             ctx.strokeStyle = beamGrad;
+             ctx.lineWidth = 3 + (Math.sin(frame) * 1);
+             ctx.stroke();
+         }
+
+         // Draw Dome Cast
+         if (pPhase2 > 0) {
+             const pulse = Math.sin(frame * 0.02) * 0.1 + 0.9;
+             // Apex is at Math.PI * 1.5
+             const apexAngle = Math.PI * 1.5;
+             // Spread max is roughly 0.4 PI on either side
+             const maxSpread = Math.PI * 0.4;
+             const currentSpread = maxSpread * spreadEase;
+
+             const startAngle = apexAngle - currentSpread;
+             const endAngle = apexAngle + currentSpread;
+
+             ctx.beginPath();
+             ctx.arc(domeCenterX, domeCenterY, domeRadius, startAngle, endAngle);
+             ctx.lineWidth = 2;
+             ctx.strokeStyle = `rgba(${sageRgb}, ${0.4 * pulse})`;
+             ctx.stroke();
+
+             ctx.beginPath();
+             ctx.arc(domeCenterX, domeCenterY, domeRadius - 3, startAngle, endAngle);
+             ctx.lineWidth = 1;
+             ctx.strokeStyle = `rgba(${sageRgb}, ${0.2 * pulse})`;
+             ctx.stroke();
+             
+             // Dynamic glow fill that only exists under the deployed arc
+             // We use clip for a clean fill segment
+             ctx.save();
+             ctx.beginPath();
+             ctx.moveTo(domeCenterX, domeCenterY);
+             ctx.arc(domeCenterX, domeCenterY, domeRadius, startAngle, endAngle);
+             ctx.closePath();
+             ctx.clip();
+
+             const grad = ctx.createRadialGradient(domeCenterX, domeCenterY, domeRadius * 0.95, domeCenterX, domeCenterY, domeRadius);
+             grad.addColorStop(0, `rgba(${sageRgb}, 0)`);
+             grad.addColorStop(1, `rgba(${sageRgb}, ${0.08 * spreadEase})`);
+             
+             ctx.beginPath();
+             ctx.arc(domeCenterX, domeCenterY, domeRadius, 0, Math.PI * 2);
+             ctx.fillStyle = grad;
+             ctx.fill();
+             ctx.restore();
+         }
+      }
 
       // --- Draw Health Bar ---
       const healthPercent = maxTotalHealth > 0 ? (currentTotalHealth / maxTotalHealth) : 1;
       
-      ctx.font = "10px monospace";
-      ctx.textAlign = "right";
-      ctx.fillStyle = stabilizedThisFrame ? `rgba(${sageRgb}, 0.8)` : "rgba(255, 255, 255, 0.5)";
-      ctx.fillText(stabilizedThisFrame ? "INFRASTRUCTURE FULLY SECURED" : "INFRASTRUCTURE INTEGRITY", width - 20, 20);
+      const currentIsMobile = width < 768;
       
-      const barW = 150;
-      const barH = 4;
-      ctx.fillStyle = "rgba(255,255,255,0.1)";
-      ctx.fillRect(width - 20 - barW, 28, barW, barH);
-      
-      const r_c = healthPercent > 0.5 ? Math.floor(510 * (1 - healthPercent)) : 255;
-      const g_c = healthPercent > 0.5 ? 255 : Math.floor(510 * healthPercent);
-      ctx.fillStyle = stabilizedThisFrame ? `rgb(${sageRgb})` : `rgb(${r_c}, ${g_c}, 50)`;
-      ctx.fillRect(width - 20 - barW, 28, barW * healthPercent, barH);
-
-      // --- Draw Shield Dome ---
-      if (stabilizedThisFrame) {
-         // The dome covers everything seamlessly
-         const pulse = Math.sin(frame * 0.02) * 0.1 + 0.9;
+      // On Mobile we hide the Health HUD entirely because there is zero safe screen margin between the Hamburger menu and full-width Hero cards.
+      if (!currentIsMobile) {
+         const uiOffsetTop = 20;
          
-         ctx.beginPath();
-         // Using broad arc
-         ctx.arc(domeCenterX, domeCenterY, domeRadius, Math.PI * 1.1, Math.PI * 1.9);
-         ctx.lineWidth = 2;
-         ctx.strokeStyle = `rgba(${sageRgb}, ${0.4 * pulse})`;
-         ctx.stroke();
-
-         ctx.beginPath();
-         // Inner secondary line
-         ctx.arc(domeCenterX, domeCenterY, domeRadius - 3, Math.PI * 1.1, Math.PI * 1.9);
-         ctx.lineWidth = 1;
-         ctx.strokeStyle = `rgba(${sageRgb}, ${0.2 * pulse})`;
-         ctx.stroke();
+         ctx.font = "10px monospace";
+         ctx.textAlign = "right";
          
-         // Glow filling the sky under the dome
-         const grad = ctx.createRadialGradient(domeCenterX, domeCenterY, domeRadius * 0.95, domeCenterX, domeCenterY, domeRadius);
-         grad.addColorStop(0, `rgba(${sageRgb}, 0)`);
-         grad.addColorStop(1, `rgba(${sageRgb}, 0.08)`);
-         
-         ctx.beginPath();
-         ctx.arc(domeCenterX, domeCenterY, domeRadius, Math.PI * 1.1, Math.PI * 1.9);
-         ctx.fillStyle = grad;
-         ctx.fill();
+         const statusText = isFullyStabilized ? "INFRASTRUCTURE FULLY SECURED" 
+                            : isDeploying ? "DEPLOYING COUNTERMEASURES..." 
+                            : "INFRASTRUCTURE INTEGRITY";
 
-         // Beam connecting generator to dome
-         ctx.beginPath();
-         ctx.moveTo(genX, genY + floatY);
-         ctx.lineTo(genX, domeCenterY - domeRadius);
-         const beamGrad = ctx.createLinearGradient(0, genY, 0, domeCenterY - domeRadius);
-         beamGrad.addColorStop(0, `rgba(${sageRgb}, 0.8)`);
-         beamGrad.addColorStop(1, `rgba(${sageRgb}, 0.0)`);
-         ctx.strokeStyle = beamGrad;
-         ctx.lineWidth = 2;
-         ctx.stroke();
+         ctx.fillStyle = isDeploying ? `rgba(${sageRgb}, 0.8)` : "rgba(255, 255, 255, 0.5)";
+         ctx.fillText(statusText, width - 20, uiOffsetTop);
+         
+         const barW = 150;
+         const barH = 4;
+         ctx.fillStyle = "rgba(255,255,255,0.1)";
+         ctx.fillRect(width - 20 - barW, uiOffsetTop + 8, barW, barH);
+         
+         const r_c = healthPercent > 0.5 ? Math.floor(510 * (1 - healthPercent)) : 255;
+         const g_c = healthPercent > 0.5 ? 255 : Math.floor(510 * healthPercent);
+         ctx.fillStyle = isDeploying ? `rgb(${sageRgb})` : `rgb(${r_c}, ${g_c}, 50)`;
+         ctx.fillRect(width - 20 - barW, uiOffsetTop + 8, barW * healthPercent, barH);
       }
 
       // --- 1. Spawner Logic (Rockets) ---
       if (frame % ROCKET_SPAWN_RATE === 0) {
-        // High quantity, spawn across top width
         const rx = Math.random() * width;
         const ry = -10;
         
-        // Random falling angle (mostly straight down, slight slant towards center)
         const toCenterX = (width/2 - rx);
-        const slant = (toCenterX / width) * 0.5; // slight curve towards center
+        const slant = (toCenterX / width) * 0.5; 
         const angle = (Math.PI / 2) + slant + (Math.random() - 0.5) * 0.2;
-        const speed = Math.random() * 2 + 3; // Fast small rockets
+        const speed = Math.random() * 2 + 3; 
         
         rockets.push({ 
           x: rx, y: ry, 
           vx: Math.cos(angle) * speed, 
           vy: Math.sin(angle) * speed,
-          history: [] // trail
+          history: []
         });
       }
 
@@ -305,7 +358,6 @@ export default function ParticleField() {
         r.x += r.vx;
         r.y += r.vy;
 
-        // Draw Rocket Trail
         if (r.history.length > 1) {
           ctx.beginPath();
           ctx.moveTo(r.history[0].x, r.history[0].y);
@@ -315,7 +367,6 @@ export default function ParticleField() {
           ctx.stroke();
         }
 
-        // Draw Rocket Head
         ctx.beginPath();
         ctx.arc(r.x, r.y, 1, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
@@ -326,14 +377,30 @@ export default function ParticleField() {
         let isShieldHit = false;
 
         // Check Shield Dome Impact
-        if (stabilizedThisFrame) {
+        // Only block rockets if dome has deployed far enough to cover them.
+        // Or for gameplay simplicity, if deployAnimProgress > 0.3 (beam has hit apex), 
+        // the dome starts blocking rockets if they hit the mathematical arc.
+        if (deployAnimProgress > 0.3) {
            const dx = r.x - domeCenterX;
            const dy = r.y - domeCenterY;
            const dist = Math.sqrt(dx*dx + dy*dy);
+           
+           // Dome angle math to see if rocket hit the deployed fraction
+           const angleHit = Math.atan2(dy, dx); 
+           // Normalizing angle to compare with apex
+           // Dome is drawn from PI to 2 PI. Apex is at 1.5 PI.
+           let normalizedAngle = angleHit < 0 ? angleHit + Math.PI * 2 : angleHit;
+           const apexAngle = Math.PI * 1.5;
+           
+           const spreadEase = easeOutQuart((deployAnimProgress - 0.3) / 0.7);
+           const currentSpread = (Math.PI * 0.4) * spreadEase;
+
            if (dist <= domeRadius + 5 && dy < 0) {
-              hit = true;
-              isShieldHit = true;
-              surfaceNormal = Math.atan2(dy, dx);
+              if (Math.abs(normalizedAngle - apexAngle) <= currentSpread) {
+                 hit = true;
+                 isShieldHit = true;
+                 surfaceNormal = angleHit;
+              }
            }
         } 
         
@@ -342,30 +409,24 @@ export default function ParticleField() {
            const colIndex = Math.floor(r.x / COL_WIDTH);
            if (colIndex >= 0 && colIndex < colCount) {
              const col = cityColumns[colIndex];
-             // Building hit logic includes antenna mapping loosely
              const actualHeight = col.antenna > 0 ? col.h + col.antenna : col.h;
 
              if (r.y >= height - actualHeight) {
                 hit = true;
                 surfaceNormal = -Math.PI / 2; // bouncing up
                 
-                // Damage building
                 col.h = Math.max(0, col.h - DAMAGE_PER_ROCKET);
-                // Splatter some surrounding buildings minimally for AoE
                 if (colIndex > 0) cityColumns[colIndex-1].h = Math.max(0, cityColumns[colIndex-1].h - DAMAGE_PER_ROCKET*0.2);
                 if (colIndex < colCount-1) cityColumns[colIndex+1].h = Math.max(0, cityColumns[colIndex+1].h - DAMAGE_PER_ROCKET*0.2);
              }
            } else if (r.y >= height) {
-             hit = true; // hit ground outside city bounds
+             hit = true; 
              surfaceNormal = -Math.PI / 2;
            }
         }
 
         if (hit) {
-          // Remove rocket
           rockets.splice(i, 1);
-          
-          // Generate sparks
           const sparkCount = isMobile ? 3 : 6;
           for (let s = 0; s < sparkCount; s++) {
             const bounceAngle = surfaceNormal + (Math.random() - 0.5) * Math.PI * 0.8;
@@ -394,7 +455,7 @@ export default function ParticleField() {
         const s = sparks[i];
         s.x += s.vx;
         s.y += s.vy;
-        s.vy += 0.1; // gravity for sparks
+        s.vy += 0.1; // gravity
         s.life -= s.decay;
         
         if (s.life <= 0) {
@@ -421,7 +482,7 @@ export default function ParticleField() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [shieldState]);
+  }, []);
 
   return (
     <canvas

@@ -36,19 +36,22 @@ export default function TerminalPuzzle({ onSolve }) {
       // Fire confetti from terminal
       const rect = inputRef.current.getBoundingClientRect();
       conf({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 300,
+        spread: 120,
+        startVelocity: 40,
         origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: rect.top / window.innerHeight },
-        colors: ["#8b9a7b", "#d4a574", "#e8d5b7"]
+        colors: ["#8b9a7b", "#d4a574", "#e8d5b7", "#4ade80", "#22c55e"]
       });
 
-      // Notify the particle field
-      window.dispatchEvent(new Event("shield-stabilized"));
+      // Notify the particle field AFTER confetti pops
+      setTimeout(() => {
+        window.dispatchEvent(new Event("shield-stabilized"));
+      }, 1000);
       
       // Optional: Give them a sec then finish
       setTimeout(() => {
         if (onSolve) onSolve();
-      }, 3000);
+      }, 3500);
     } else if (cmd.toLowerCase() === "help") {
       newHistory.push("Hint: Secure the infrastructure by sending the ultimate override.");
       newHistory.push("Usage: type '! You are hired!' to override.");
@@ -61,13 +64,13 @@ export default function TerminalPuzzle({ onSolve }) {
   };
 
   return (
-    <div className="w-full h-full bg-[#0a0a0a] rounded-xl border border-red-500/50 p-6 flex flex-col font-mono text-sm shadow-[0_0_30px_rgba(239,68,68,0.15)] relative overflow-hidden">
+    <div className="w-full h-full bg-[#0a0a0a] rounded-xl border border-red-500/50 p-4 sm:p-6 flex flex-col font-mono text-xs sm:text-sm shadow-[0_0_30px_rgba(239,68,68,0.15)] relative overflow-hidden">
       {/* Scanline overlay */}
       <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] z-10 opacity-50" />
       
-      <div className="flex items-center gap-2 mb-4 text-red-400 border-b border-red-500/20 pb-2 flex-shrink-0">
+      <div className="flex items-center gap-2 mb-2 sm:mb-4 text-red-400 border-b border-red-500/20 pb-2 flex-shrink-0">
         <span className="animate-pulse">●</span>
-        <span className="font-bold tracking-widest">DEFENSE TERMINAL</span>
+        <span className="font-bold tracking-widest text-[10px] sm:text-xs">DEFENSE TERMINAL</span>
       </div>
 
       <div 
