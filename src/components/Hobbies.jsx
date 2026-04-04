@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ExternalLink, Tag } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
+import MagneticCard from "./MagneticCard";
+import ScrambleText from "./ScrambleText";
 
 const BLOGS = [
   {
@@ -9,7 +11,7 @@ const BLOGS = [
     excerpt:
       "RDP vs VNC vs others — a breakdown of protocols, tradeoffs, and when each remote desktop solution actually makes sense.",
     link: "https://medium.com/@arpitb.lgupta1/stop-guessing-which-remote-desktop-protocol-you-should-actually-use-and-when-79fb2998893f",
-    tags: ["RDP", "Remote Access", "Networking", "Security"],
+    tags: ["RDP", "Remote Access", "Networking"],
   },
   {
     title: "The Hidden Holes: Why Our Super-Fast Computers Have Security Problems We're Ignoring",
@@ -27,7 +29,7 @@ const BLOGS = [
     excerpt:
       "An overview of evolving attack vectors in modern browsers and why robust browser security is critical today.",
     link: "https://medium.com/@arpit_33734/timeless-attack-vectors-why-cutting-edge-browser-security-is-essential-027fa887ca7a",
-    tags: ["Browser Security", "Web", "Attack Vectors"],
+    tags: ["Browser Security", "Web"],
   },
   {
     title: "Digital Clock Project",
@@ -36,7 +38,7 @@ const BLOGS = [
     excerpt:
       "A digital clock built with flip-flops and logic gates — blending electronics design with timing circuits.",
     link: "https://chiragkotian.github.io/Past_Projects/Digital_Clock.html",
-    tags: ["Hardware", "Electronics", "Logic Design"],
+    tags: ["Hardware", "Electronics"],
   },
   {
     title: "RC 3D-Printed Plane",
@@ -45,7 +47,7 @@ const BLOGS = [
     excerpt:
       "A 3D-printed RC plane project combining design, electronics, and control system integration.",
     link: "https://github.com/ChiragKotian/RC_3D-Printed_plane",
-    tags: ["RC", "3D Printing", "Electronics"],
+    tags: ["RC", "3D Printing"],
   },
   {
     title: "RC Escapade Race Car",
@@ -54,165 +56,81 @@ const BLOGS = [
     excerpt:
       "Custom-built RC race car with custom PCB, remote control integration, and functional design for competition.",
     link: "https://github.com/ChiragKotian/RC-Escapade-RC-race-car-/",
-    tags: ["RC", "Hardware", "PCB Design"],
+    tags: ["RC", "Hardware"],
   },
   {
-    title: "Drone _Pixhawk",
+    title: "Drone — Pixhawk",
     subtitle: "Hobby Project • Drone",
     img: "https://chiragkotian.github.io/Past_Projects/images/firstpixhwak.png",
     excerpt:
       "A drone made out of recycled parts and components salvaged from older club projects.",
     link: "https://chiragkotian.github.io/Past_Projects/Pixhawk_first_drone.html",
-    tags: ["RC", "3D Printing", "Electronics"],
+    tags: ["RC", "Electronics"],
   },
 ];
 
-export default function Hobbies() {
-  const [activeTag, setActiveTag] = useState("All");
-  const [progress, setProgress] = useState(0);
-  const railRef = useRef(null);
-
-  const tags = useMemo(
-    () => ["All", ...Array.from(new Set(BLOGS.flatMap((b) => b.tags)))],
-    []
-  );
-
-  const filtered = useMemo(
-    () =>
-      activeTag === "All"
-        ? BLOGS
-        : BLOGS.filter((b) => b.tags.includes(activeTag)),
-    [activeTag]
-  );
-
-  useEffect(() => {
-    const el = railRef.current;
-    if (!el) return;
-
-    const onScroll = () => {
-      const pct = el.scrollLeft / (el.scrollWidth - el.clientWidth || 1);
-      setProgress(Math.max(0, Math.min(1, pct)));
-    };
-
-    el.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    return () => el.removeEventListener("scroll", onScroll);
-  }, [filtered.length]);
-
+export default function Writing() {
   return (
-    <section
-      id="hobbies"
-      className="relative min-h-screen text-white py-20 overflow-hidden"
-    >
-      {/* soft ambient glow */}
-      <div className="absolute inset-0 pointer-events-none opacity-60 bg-gradient-to-br from-blue-900/10 via-transparent to-cyan-900/10" />
+    <section id="writing" className="py-24 md:py-32 relative">
+      <div className="warm-divider mb-24 md:mb-32" />
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
-          <h2 className="text-4xl font-extrabold">
-            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Hobbies & Blogs
-            </span>
+      <div className="section-container">
+        <ScrollReveal>
+          <p className="text-accent text-sm tracking-widest uppercase mb-3">Thoughts & Builds</p>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-accent-cream mb-16">
+            <ScrambleText text="Writing & Interests" />
           </h2>
+        </ScrollReveal>
 
-          {/* Tag filter */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs uppercase tracking-wider text-gray-400 flex items-center gap-2">
-              <Tag className="w-4 h-4" /> Filter
-            </span>
-            {tags.map((t) => (
-              <button
-                key={t}
-                onClick={() => setActiveTag(t)}
-                className={`px-3 py-1 rounded-full text-xs border transition
-                  ${
-                    activeTag === t
-                      ? "border-cyan-500/60 text-cyan-300 shadow-[0_0_12px_rgba(59,130,246,0.35)]"
-                      : "border-gray-700 text-gray-300 hover:border-blue-400 hover:text-blue-300"
-                  }`}
+        <div className="grid md:grid-cols-2 gap-6">
+          {BLOGS.map((b, idx) => (
+            <ScrollReveal key={idx} delay={idx * 60}>
+              <MagneticCard intensity={5} className="h-full">
+              <a
+                href={b.link}
+                target="_blank"
+                rel="noreferrer"
+                className="group card-warm overflow-hidden flex flex-col h-full hover:border-accent/40"
               >
-                {t}
-              </button>
-            ))}
-          </div>
-        </header>
-
-        {/* Filmstrip rail */}
-        <div
-          ref={railRef}
-          className="relative flex gap-8 overflow-x-auto pb-6 snap-x snap-mandatory
-                     [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full
-                     [&::-webkit-scrollbar-thumb]:bg-blue-500/30 [&::-webkit-scrollbar-track]:bg-transparent"
-        >
-          {filtered.map((b, i) => (
-            <article
-              key={i}
-              className="group relative snap-center min-w-[85%] md:min-w-[60%] lg:min-w-[48%]
-                         rounded-2xl overflow-hidden border border-gray-700 bg-gray-900/40 backdrop-blur-md
-                         transition-transform duration-300 hover:-translate-y-1 hover:border-blue-400
-                         hover:shadow-[0_0_30px_rgba(59,130,246,0.38)]"
-            >
-              {/* animated gradient halo */}
-              <div className="absolute inset-0 pointer-events-none opacity-40 group-hover:opacity-80 transition
-                              bg-[radial-gradient(600px_400px_at_20%_20%,rgba(59,130,246,0.15),transparent_70%),radial-gradient(600px_400px_at_80%_80%,rgba(34,211,238,0.15),transparent_70%)]
-                              animate-[pulse_6s_ease-in-out_infinite]" />
-
-              {/* cover with fixed aspect ratio */}
-              <div className="relative w-full aspect-video overflow-hidden">
-                <img
-                  src={b.img}
-                  alt={b.title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 group-hover:opacity-100 transition duration-700"
-                  loading="lazy"
-                />
-              </div>
-
-              {/* text panel */}
-              <div className="relative p-6">
-                <p className="text-xs uppercase tracking-wider text-gray-400">
-                  {b.subtitle}
-                </p>
-                <h3 className="mt-1 text-xl font-semibold text-blue-300 group-hover:text-blue-200 transition">
-                  {b.title}
-                </h3>
-                <p className="mt-3 text-sm text-gray-300 line-clamp-3">
-                  {b.excerpt}
-                </p>
-
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {b.tags.map((tag, j) => (
-                    <span
-                      key={j}
-                      className="px-2.5 py-1 rounded-full text-xs bg-blue-500/10 text-blue-300
-                                 transition transform hover:-translate-y-0.5 hover:bg-blue-500/20"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                {/* Image */}
+                <div className="relative aspect-video overflow-hidden">
+                  <img
+                    src={b.img}
+                    alt={b.title}
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100
+                               group-hover:scale-105 transition-all duration-700"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent pointer-events-none" />
                 </div>
 
-                <a
-                  href={b.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-cyan-500/50 text-cyan-300 text-sm
-                             hover:bg-blue-500/20 hover:shadow-[0_0_16px_rgba(59,130,246,0.45)] transition"
-                >
-                  Read More <ExternalLink className="w-4 h-4" />
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
+                {/* Content */}
+                <div className="p-6 flex flex-col flex-grow">
+                  <span className="text-xs text-neutral-500 tracking-wider uppercase mb-2">
+                    {b.subtitle}
+                  </span>
+                  <h3 className="font-heading text-lg font-semibold text-accent-cream mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                    {b.title}
+                  </h3>
+                  <p className="text-sm text-neutral-400 leading-relaxed mb-4 flex-grow line-clamp-3">
+                    {b.excerpt}
+                  </p>
 
-        {/* progress bar */}
-        <div className="mt-6 h-1 w-full rounded-full bg-gray-800/60 overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-blue-400 to-cyan-400 transition-[width] duration-200"
-            style={{ width: `${progress * 100}%` }}
-          />
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap gap-2">
+                      {b.tags.map((tag, j) => (
+                        <span key={j} className="pill text-xs">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-neutral-600 group-hover:text-accent transition-colors flex-shrink-0 ml-3" />
+                  </div>
+                </div>
+              </a>
+              </MagneticCard>
+            </ScrollReveal>
+          ))}
         </div>
       </div>
     </section>

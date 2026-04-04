@@ -1,16 +1,20 @@
-const EXPERIENCES = [
-  { role: "Software Developer - Fullstack",
-    company: "Kasm Workspaces",
-    date:"July 2025 - Present",
-    desc: "Full Stack development for the 1.18 release",
-    tags: [ "Docker", "JS", "python", "Remote desktop protocols", "JWT"]
-  },
+import ScrollReveal from "./ScrollReveal";
+import MagneticCard from "./MagneticCard";
+import ScrambleText from "./ScrambleText";
 
+const EXPERIENCES = [
+  {
+    role: "Software Developer - Fullstack",
+    company: "Kasm Workspaces",
+    date: "July 2025 - Present",
+    desc: "Full Stack development for the 1.18 release",
+    tags: ["Docker", "JS", "Python", "Remote Desktop Protocols", "JWT"],
+  },
   {
     role: "Software Developer and Security Researcher",
-    company: "Square X, Singapore",
+    company: "Square X, Singapore (acquired by Zscaler)",
     date: "May 2024 - June 2025",
-    desc: "Analyzed file formats (PDF, OOXML, PE) for hidden threats, developed malware analysis tooling, and co-authored 'Last Mile Reassembly Attack' (DEFCON 2024). Built custom Windows images on Azure integrating 20+ tools., Worked on security researches.",
+    desc: "Analyzed file formats (PDF, OOXML, PE) for hidden threats, developed malware analysis tooling, and co-authored 'Last Mile Reassembly Attack' (DEFCON 2024). Built custom Windows images on Azure integrating 20+ tools. Worked on security researches.",
     tags: ["Rust", "Security Research", "Azure", "Malware Analysis"],
   },
   {
@@ -24,61 +28,62 @@ const EXPERIENCES = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-20 text-white relative overflow-hidden">
-      <div className="container mx-auto px-6">
-        <h2 className="text-center text-4xl font-extrabold mb-16">
-          <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            Experience
-          </span>
-        </h2>
-<div className="relative">
-  {/* vertical glowing line */}
-  <div className="absolute left-6 top-0 w-1 h-full bg-gradient-to-b from-blue-400 via-cyan-400 to-transparent rounded-full" />
+    <section id="experience" className="py-24 md:py-32 relative">
+      <div className="section-container">
+        <ScrollReveal>
+          <p className="text-accent text-sm tracking-widest uppercase mb-3">Career</p>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold text-accent-cream mb-16">
+            <ScrambleText text="Experience" />
+          </h2>
+        </ScrollReveal>
 
-  <div className="space-y-12 pl-12"> {/* 👈 added padding for card spacing */}
-    {EXPERIENCES.map((exp, idx) => (
-      <div key={idx} className="relative group">
-        {/* Glowing dot */}
-        <span className="absolute left-[10px] top-8 w-4 h-4 rounded-full bg-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.8)]"></span>
-        <span className="absolute left-[10px] top-8 w-4 h-4 rounded-full bg-blue-400 animate-ping opacity-60"></span>
+        <div className="relative">
+          {/* Timeline line */}
+          <div className="absolute left-[7px] md:left-[9px] top-2 bottom-2 w-px bg-gradient-to-b from-accent/40 via-border to-transparent" />
 
-        {/* Card */}
-        <div
-          className="bg-gray-900/40 backdrop-blur-md p-6 rounded-xl border border-gray-700
-                     hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/30 transition
-                     transform hover:-translate-y-1"
-        >
-          <div className="flex px-3 justify-between items-center">
-            <h3 className="text-xl font-semibold text-blue-400">
-              {exp.company}
-            </h3>
-            <span className="text-xs bg-gray-800/70 px-3 py-1 rounded-full text-gray-300">
-              {exp.date}
-            </span>
-          </div>
-          <p className="mt-1 text-gray-300 text-sm">{exp.role}</p>
-          <p className="mt-4 text-gray-400 text-sm leading-relaxed">
-            {exp.desc}
-          </p>
+          <div className="space-y-12">
+            {EXPERIENCES.map((exp, idx) => (
+              <ScrollReveal key={idx} delay={idx * 100}>
+                <div className="relative pl-10 md:pl-12 group">
+                  {/* Timeline dot */}
+                  <div className="absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-accent/60 bg-bg group-hover:bg-accent/20 transition-colors duration-300">
+                    <div className="absolute inset-1 rounded-full bg-accent/60" />
+                  </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            {exp.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 bg-blue-500/10 text-blue-300 rounded-full text-xs 
-                           transition transform hover:-translate-y-1 hover:bg-blue-500/20"
-              >
-                {tag}
-              </span>
+                  {/* Card */}
+                  <MagneticCard>
+                  <div className="card-warm p-6 md:p-8">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                      <h3 className="font-heading text-xl font-semibold text-accent-cream">
+                        {exp.company}
+                      </h3>
+                      <span className="text-xs text-neutral-500 bg-surface-light px-3 py-1 rounded-full whitespace-nowrap">
+                        {exp.date}
+                      </span>
+                    </div>
+
+                    <p className="text-accent text-sm font-medium mb-3">
+                      {exp.role}
+                    </p>
+
+                    <p className="text-neutral-400 text-sm leading-relaxed">
+                      {exp.desc}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mt-5">
+                      {exp.tags.map((tag, i) => (
+                        <span key={i} className="pill">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  </MagneticCard>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
-      </div>
-    ))}
-  </div>
-</div>
-
       </div>
     </section>
   );

@@ -2,180 +2,308 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* ===== Base ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+html {
+  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: none;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #e8e8e8;
+  background-color: #0f0f0f;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* ===== Film Grain Overlay ===== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+/* ===== Typography ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.15;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f0f0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(212, 165, 116, 0.3);
+  color: #e8d5b7;
+}
+
+/* ===== Section Shared ===== */
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .section-container {
+    padding: 0 3rem;
+  }
+}
+
+/* ===== Warm Divider ===== */
+.warm-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #2a2a2a 20%, #3a3a3a 50%, #2a2a2a 80%, transparent);
+}
+
+/* ===== Card Base ===== */
+.card-warm {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-warm:hover {
+  border-color: #3a3a3a;
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Tag/Pill ===== */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  border: 1px solid #2a2a2a;
+  color: #999;
+  transition: all 0.2s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.pill:hover {
+  border-color: #d4a574;
+  color: #d4a574;
 }
 
-/* ===== Tile Grid & Glow Utilities ===== */
-
-/* Deep blue page background (optional) */
-html, body, #root {
-  background: radial-gradient(1200px 600px at 50% -10%, rgba(37,99,235,0.10), transparent 40%),
-              linear-gradient(180deg, #0b1220 0%, #0d1426 100%);
-}
-
-/* Grid inside each card (sharp lines) */
-/* Grid lines inside card */
-.tile-grid {
-  position: relative;
-  background-image:
-    linear-gradient(rgba(59,130,246,0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,130,246,0.12) 1px, transparent 1px);
-  background-size: 22px 22px;
-}
-
-/* Fading edges for smooth grid cut-off */
-.tile-grid::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 12px; /* same as card radius */
-  background: radial-gradient(circle at center, rgba(11,17,30,0) 85%, rgba(11,17,30,1) 100%);
-  pointer-events: none;
-}
-
-
-/* Fancy gradient border that brightens on hover */
-.card-border {
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden; /* clips glow/tint nicely */
-}
-.card-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  padding: 1px;                                /* border thickness */
-  background: linear-gradient(160deg, rgba(59,130,246,.55), rgba(56,189,248,.25));
-  -webkit-mask:
-     linear-gradient(#000 0 0) content-box,
-     linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;             /* hollow center */
-  pointer-events: none;
-  opacity: .55;
-  transition: opacity .25s ease;
-}
-.card-border:hover::before { opacity: 1; }
-
-/* Soft outer glow used on hover */
-.hover-glow {
-  transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease;
-}
-.hover-glow:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 40px rgba(59,130,246,0.18);
-}
-
-/* Blue tint overlay that fades in on hover */
-.card-tint {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(800px 300px at 50% 0%, rgba(59,130,246,.10), transparent 60%),
-              rgba(30,58,138,0.14);
+/* ===== Scroll Reveal Animation ===== */
+.reveal {
   opacity: 0;
-  transition: opacity .25s ease;
-}
-.card-border:hover .card-tint { opacity: 1; }
-
-/* Tiny glowing corner dots (purely decorative) */
-.corner-dot {
-  position: absolute; width: 6px; height: 6px; border-radius: 9999px;
-  background: rgba(59,130,246,.85);
-  box-shadow: 0 0 14px rgba(59,130,246,.85);
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
-.card-grid {
-  position: absolute;
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Intro Overlay ===== */
+.intro-overlay {
+  position: fixed;
   inset: 0;
-  border-radius: inherit;
-  background-image:
-    linear-gradient(rgba(59,130,246,0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,130,246,0.12) 1px, transparent 1px);
-  background-size: 22px 22px;
-  background-position: 0 0;
-  z-index: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f0f0f;
+  transition: opacity 0.8s ease;
+}
+
+.intro-overlay.fade-out {
+  opacity: 0;
   pointer-events: none;
 }
 
+.intro-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  color: #e8d5b7;
+  letter-spacing: -0.02em;
+  text-align: center;
+  display: flex;
+  gap: 0.15em;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-/* Flip animation helpers */
-.perspective {
-  perspective: 1000px;
+.intro-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px);
+  animation: letterReveal 0.5s ease forwards;
 }
-.preserve-3d {
-  transform-style: preserve-3d;
+
+.intro-letter.blast {
+  animation: letterBlast 0.6s ease forwards;
 }
-.backface-hidden {
-  backface-visibility: hidden;
+
+@keyframes letterReveal {
+  0% { opacity: 0; transform: translateY(40px) scale(0.8); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-.rotate-y-180 {
-  transform: rotateY(180deg);
+
+@keyframes letterBlast {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  50% { opacity: 0.8; }
+  100% { opacity: 0; transform: var(--blast-dir) scale(0.3); }
+}
+
+/* ===== Ambient Background Glow ===== */
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(800px 600px at 20% 20%, rgba(212, 165, 116, 0.03), transparent 60%),
+    radial-gradient(600px 400px at 80% 80%, rgba(139, 154, 123, 0.02), transparent 60%);
+}
+
+/* ===== Hero Holographic Avatar ===== */
+.hero-float {
+  animation: heroFloat 4s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-16px); }
+}
+
+/* Scanning line that sweeps down the avatar */
+.hero-scanline {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(212, 165, 116, 0.06) 40%,
+    rgba(232, 213, 183, 0.12) 50%,
+    rgba(212, 165, 116, 0.06) 60%,
+    transparent
+  );
+  animation: scanDown 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes scanDown {
+  0% { top: -40%; }
+  100% { top: 120%; }
+}
+
+/* Glow pulse under the avatar */
+.hero-glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.4; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 0.7; transform: translateX(-50%) scaleX(1.1); }
+}
+
+/* Floating info cards with different timings */
+.hero-card-float-1 {
+  animation: cardFloat1 5s ease-in-out infinite;
+}
+
+.hero-card-float-2 {
+  animation: cardFloat2 6s ease-in-out infinite;
+}
+
+.hero-card-float-3 {
+  animation: cardFloat3 4.5s ease-in-out infinite;
+}
+
+@keyframes cardFloat1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-4px, -8px); }
+}
+
+@keyframes cardFloat2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(6px, -6px); }
+}
+
+@keyframes cardFloat3 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-3px, 6px); }
+}
+
+/* Connecting lines from cards to avatar (dots) */
+.hero-card-float-1::after,
+.hero-card-float-2::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(212, 165, 116, 0.5);
+  box-shadow: 0 0 10px rgba(212, 165, 116, 0.3);
+}
+
+.hero-card-float-1::after {
+  top: 50%;
+  right: -10px;
+}
+
+.hero-card-float-2::after {
+  top: 50%;
+  left: -10px;
+}
+
+/* Responsive avatar sizing */
+@media (max-width: 768px) {
+  .hero-card-float-1,
+  .hero-card-float-2,
+  .hero-card-float-3 {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-card-float-1 > div,
+  .hero-card-float-2 > div,
+  .hero-card-float-3 > div {
+    transform: scale(0.85);
+  }
 }

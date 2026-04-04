@@ -1,40 +1,28 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Menu, X } from "lucide-react";
+
+const SECTIONS = ["home", "experience", "projects", "achievements", "skills", "writing"];
 
 export default function Navbar() {
   const [active, setActive] = useState("home");
-  const [scroll, setScroll] = useState(0);
-  const [highlightStyle, setHighlightStyle] = useState({
-    width: 0,
-    transform: "translateX(0px)",
-  });
-
-  const navRef = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [highlightStyle, setHighlightStyle] = useState({ width: 0, transform: "translateX(0px)" });
   const linksRef = useRef(null);
 
+  // Scroll & section observer
   useEffect(() => {
-    // scroll progress bar
-    const onScroll = () => {
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      setScroll(scrolled);
-    };
-    window.addEventListener("scroll", onScroll);
+    const onScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll, { passive: true });
 
-    // observe sections to update active
     const sections = document.querySelectorAll("section");
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
+          if (entry.isIntersecting) setActive(entry.target.id);
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
     sections.forEach((sec) => observer.observe(sec));
 
@@ -44,12 +32,12 @@ export default function Navbar() {
     };
   }, []);
 
-  // recalc underline position on active change + resize
+  // Sliding underline position
   useLayoutEffect(() => {
     const compute = () => {
       const wrap = linksRef.current;
       if (!wrap) return;
-      const btn = wrap.querySelector(`#nav-${active}`);
+      const btn = wrap.querySelector(`[data-section="${active}"]`);
       if (!btn) return;
       const b = btn.getBoundingClientRect();
       const c = wrap.getBoundingClientRect();
@@ -63,68 +51,96 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", compute);
   }, [active]);
 
-  const sections = ["home", "experience", "projects", "achievements", "hobbies","skills"];
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
+  };
 
   return (
-    <header className="fixed top-0 w-full z-50">
-      {/* Scroll progress bar */}
-      <div
-        className="h-1 bg-gradient-to-r from-blue-400 to-cyan-400 transition-all duration-200"
-        style={{ width: `${scroll}%` }}
-      />
-
-      {/* Navbar */}
-      <nav className="backdrop-blur-md bg-transparent border-b border-blue-500/20">
-        <div
-          ref={navRef}
-          className="container mx-auto px-6 py-4 flex justify-between items-center"
+    <header
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-bg/80 backdrop-blur-md border-b border-border"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
+      <nav className="section-container flex justify-between items-center h-16">
+        {/* Logo */}
+        <button
+          onClick={() => scrollTo("home")}
+          className="font-heading font-bold text-lg text-accent-cream hover:text-accent transition-colors"
         >
-          {/* Logo + name */}
-          <div className="flex items-center gap-3">
-            <img
-              src="arpit.png"
-              alt="Arpit"
-              className="w-10 h-10 rounded-full border-2 border-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
-            />
-            <span className="font-bold text-lg text-blue-400 hover:text-cyan-300 transition">
-              Arpit Gupta
-            </span>
-          </div>
+          AG
+        </button>
 
-          {/* Links with sliding underline */}
-          <div
-            ref={linksRef}
-            className="relative flex gap-8 text-sm uppercase tracking-wider"
-          >
-            {/* Single underline bar */}
-            <span
-              className="pointer-events-none absolute bottom-[-6px] h-[2px]
-                         bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full
-                         shadow-[0_0_8px_rgba(59,130,246,0.7)]
-                         transition-[width,transform] duration-300 ease-out"
-              style={highlightStyle}
-            />
+        {/* Desktop links */}
+        <div
+          ref={linksRef}
+          className="relative hidden md:flex gap-8 text-sm"
+        >
+          {/* Sliding underline */}
+          <span
+            className="pointer-events-none absolute bottom-[-4px] h-[2px] bg-accent rounded-full transition-[width,transform] duration-300 ease-out"
+            style={highlightStyle}
+          />
 
-            {sections.map((sec) => (
-      <button
-  id={`nav-${sec}`}
-  key={sec}
-  onClick={() =>
-    document.getElementById(sec)?.scrollIntoView({ behavior: "smooth" })
-  }
-  className={`relative pb-1 font-medium transition focus:outline-none focus:ring-0 ${
-    active === sec
-      ? "text-blue-400 drop-shadow-[0_0_6px_rgba(59,130,246,0.8)]"
-      : "text-gray-300 hover:text-gray-100"
-  }`}
->
-  {sec}
-</button>
-
-            ))}
-          </div>
+          {SECTIONS.map((sec) => (
+            <button
+              key={sec}
+              data-section={sec}
+              onClick={() => scrollTo(sec)}
+              className={`relative pb-1 capitalize font-medium transition-colors focus:outline-none ${
+                active === sec
+                  ? "text-accent-cream"
+                  : "text-neutral-500 hover:text-neutral-300"
+              }`}
+            >
+              {sec}
+            </button>
+          ))}
         </div>
+
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden p-2 text-neutral-400 hover:text-accent-cream transition-colors focus:outline-none"
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </nav>
+
+      {/* Mobile menu overlay */}
+      <div
+        className={`fixed inset-0 top-16 bg-bg/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 transition-all duration-300 md:hidden ${
+          menuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
+        {SECTIONS.map((sec, i) => (
+          <button
+            key={sec}
+            onClick={() => scrollTo(sec)}
+            className={`text-2xl font-heading font-semibold capitalize transition-all duration-300 ${
+              active === sec ? "text-accent-cream" : "text-neutral-500 hover:text-neutral-300"
+            }`}
+            style={{
+              transitionDelay: menuOpen ? `${i * 50}ms` : "0ms",
+              transform: menuOpen ? "translateY(0)" : "translateY(20px)",
+              opacity: menuOpen ? 1 : 0,
+            }}
+          >
+            {sec}
+          </button>
+        ))}
+      </div>
     </header>
   );
 }

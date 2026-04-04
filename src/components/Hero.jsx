@@ -1,85 +1,92 @@
-import { Github, Linkedin, Mail } from "lucide-react";
-import { ReactTyped } from "react-typed";
-import { useEffect, useState } from "react";
+import { Github, Linkedin, Mail, ArrowDown } from "lucide-react";
+import ScrollReveal from "./ScrollReveal";
+import HeroAvatar from "./HeroAvatar";
 
 export default function Hero() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => setVisible(true), 200); // delay for slide-in
-  }, []);
-
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center text-white overflow-hidden"
+      className="relative min-h-screen flex items-center overflow-hidden pt-16"
     >
-      {/* Background subtle glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-cyan-900/20 pointer-events-none" />
+      {/* Subtle warm gradient background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[800px] h-[600px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(ellipse, #d4a574, transparent 70%)" }}
+        />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] rounded-full opacity-[0.03]"
+          style={{ background: "radial-gradient(ellipse, #8b9a7b, transparent 70%)" }}
+        />
+      </div>
 
-      <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
-        {/* Left - intro */}
-        <div
-          className={`transition-all duration-1000 ${visible ? "translate-x-0 opacity-100" : "-translate-x-12 opacity-0"
-            }`}
-        >
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-            <ReactTyped
-              strings={["Hi, I am Arpit"]}
-              typeSpeed={200}
-              backSpeed={70}
-              showCursor={true}
-            />
-          </h1>
-          <h2 className="mt-4 text-2xl md:text-3xl font-extrabold text-blue-400">
-            Software Developer & Security Researcher
-          </h2>
-          <p className="mt-6 text-gray-400 max-w-md">
-            Specializing in secure software development and malware analysis.
-            Currently working at <span className="text-blue-300">Kasm Workspaces, USA</span>.
-          </p>
+      <div className="section-container w-full relative z-10">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-8 items-center">
+          {/* Left — Intro */}
+          <div className="order-2 md:order-1">
+            <ScrollReveal>
+              <p className="text-accent font-medium text-sm tracking-widest uppercase mb-4">
+                Software Developer & Security Researcher
+              </p>
+            </ScrollReveal>
 
-          {/* Social links */}
-          <div className="flex gap-4 mt-8">
-            {[
-              { icon: Github, href: "https://github.com/arpitguptagithub" },
-              {
-                icon: Linkedin,
-                href: "https://www.linkedin.com/in/arpit-gupta-9482bb239/",
-              },
-              { icon: Mail, href: "mailto:arpitb.lgupta1@gmail.com" },
-            ].map((s, i) => (
-              <a
-                key={i}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer"
-                className="p-3 rounded-lg border border-cyan-500/50 hover:bg-blue-500/20 
-                           transition-all hover:scale-110 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]"
-              >
-                <s.icon className="w-6 h-6 text-cyan-400" />
-              </a>
-            ))}
+            <ScrollReveal delay={100}>
+              <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold text-accent-cream leading-[1.05] tracking-tight">
+                Arpit
+                <br />
+                Gupta
+              </h1>
+            </ScrollReveal>
+
+            <ScrollReveal delay={200}>
+              <p className="mt-6 text-neutral-400 max-w-lg text-lg leading-relaxed">
+                Specializing in secure software development and malware analysis.
+                Currently building at{" "}
+                <span className="text-accent-cream">Kasm Workspaces, USA</span>.
+                Featured at DEFCON and RSA Conference.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal delay={300}>
+              <div className="flex gap-3 mt-8">
+                {[
+                  { icon: Github, href: "https://github.com/arpitguptagithub", label: "GitHub" },
+                  { icon: Linkedin, href: "https://www.linkedin.com/in/arpit-gupta-9482bb239/", label: "LinkedIn" },
+                  { icon: Mail, href: "mailto:arpitb.lgupta1@gmail.com", label: "Email" },
+                ].map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={s.label}
+                    className="group p-3 rounded-xl border border-border hover:border-accent/40
+                               transition-all duration-300 hover:-translate-y-1
+                               hover:shadow-[0_8px_30px_rgba(212,165,116,0.08)]"
+                  >
+                    <s.icon className="w-5 h-5 text-neutral-500 group-hover:text-accent transition-colors" />
+                  </a>
+                ))}
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Right — 3D Holographic Avatar */}
+          <div className="order-1 md:order-2 flex justify-center md:justify-end">
+            <ScrollReveal delay={200}>
+              <HeroAvatar />
+            </ScrollReveal>
           </div>
         </div>
 
-        {/* Right - skill code box */}
-        <div
-          className={`transition-all duration-1000 delay-300 ${visible ? "translate-x-0 opacity-100" : "translate-x-12 opacity-0"
-            }`}
-        >
-          <div className="relative rounded-xl border border-cyan-500/50 bg-gray-900/50 p-6 font-mono text-sm text-blue-200 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.6)] transition">
-            <p className="text-cyan-400">// Skills Overview</p>
-            <pre>
-              {`const skills = {
-  languages: ["C++", "Rust", "Python", "Java"],
-  security: ["Malware Analysis", "Digital Forensics"],
-  microservices: ["Docker", "Kubernetes", "openMP", "MPI"],
-  cloud: ["AWS", "Azure", "GCP"]
-}`}
-            </pre>
-          </div>
-        </div>
+        {/* Scroll indicator */}
+        <ScrollReveal delay={500} className="absolute bottom-10 left-1/2 -translate-x-1/2">
+          <button
+            onClick={() => document.getElementById("experience")?.scrollIntoView({ behavior: "smooth" })}
+            className="flex flex-col items-center gap-2 text-neutral-600 hover:text-accent transition-colors"
+          >
+            <span className="text-xs tracking-widest uppercase">Scroll</span>
+            <ArrowDown className="w-4 h-4 animate-bounce" />
+          </button>
+        </ScrollReveal>
       </div>
     </section>
   );
