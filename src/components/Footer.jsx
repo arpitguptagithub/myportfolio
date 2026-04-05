@@ -5,14 +5,22 @@ export default function Footer() {
     <footer className="relative mt-12">
       <div className="warm-divider" />
 
-      <div className="section-container py-16">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+      <div className="section-container py-16 relative">
+        <div 
+          className="absolute inset-x-0 bottom-0 h-[200px] -z-10 bg-[#06080a]/70 backdrop-blur-md pointer-events-none"
+          style={{
+            WebkitMaskImage: "linear-gradient(to top, black 40%, transparent 100%)",
+            maskImage: "linear-gradient(to top, black 40%, transparent 100%)",
+          }}
+        />
+
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 relative z-10">
           {/* Left — Branding */}
           <div>
-            <h2 className="font-heading text-xl font-bold text-accent-cream">
+            <h2 className="font-heading text-xl font-bold text-accent-cream drop-shadow-md">
               Arpit Gupta
             </h2>
-            <p className="text-sm text-neutral-500 mt-1">
+            <p className="text-sm text-neutral-400 mt-1 drop-shadow-sm">
               Software Developer & Security Researcher
             </p>
           </div>
@@ -30,10 +38,11 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={s.label}
-                className="group p-2.5 rounded-lg border border-border hover:border-accent/30
-                           transition-all duration-300 hover:-translate-y-0.5"
+                className="group p-2.5 rounded-lg border border-border/50 bg-background/40 backdrop-blur-sm
+                           hover:border-accent/40 transition-all duration-300 hover:-translate-y-0.5
+                           hover:bg-background/80 hover:shadow-[0_8px_30px_rgba(212,165,116,0.15)]"
               >
-                <s.icon className="w-4 h-4 text-neutral-500 group-hover:text-accent transition-colors" />
+                <s.icon className="w-4 h-4 text-neutral-400 group-hover:text-accent transition-colors drop-shadow-sm" />
               </a>
             ))}
           </div>
