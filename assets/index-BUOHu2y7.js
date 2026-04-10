@@ -1,4 +1,4 @@
-let var_0b7dc87b_6a99_5c1d_97ca_64646e919cff;
+let var_7fa13deb_e3ef_57ba_a3b2_d823f32c3fd4;
 let __tla = (async () => {
   var Vd = (y, v) => () => (v || y((v = {
     exports: {}
@@ -10084,7 +10084,7 @@ Error generating stack: ` + i.message + `
                   s.jsx("h2", {
                     className: "font-heading text-3xl md:text-4xl font-bold text-accent-cream mb-4",
                     children: s.jsx(tr, {
-                      text: "Applying High Performance Contexts"
+                      text: "Applying High Performance Contexts for live demo, because why not?"
                     })
                   }),
                   s.jsxs("div", {
@@ -10486,9 +10486,9 @@ Error generating stack: ` + i.message + `
       children: s.jsx(ap, {})
     }));
   });
-  var_0b7dc87b_6a99_5c1d_97ca_64646e919cff = op();
+  var_7fa13deb_e3ef_57ba_a3b2_d823f32c3fd4 = op();
 })();
 export {
   __tla,
-  var_0b7dc87b_6a99_5c1d_97ca_64646e919cff as default
+  var_7fa13deb_e3ef_57ba_a3b2_d823f32c3fd4 as default
 };
