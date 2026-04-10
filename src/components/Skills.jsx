@@ -14,7 +14,7 @@ const CATEGORIES = [
   {
     title: "Security",
     icon: Shield,
-    skills: ["Malware Analysis", "Browser Security", "Threat Detection", "Network Security"],
+    skills: ["Browser Security", "Threat Detection", "Network Security", " Security Research"],
   },
   {
     title: "Cloud & DevOps",
@@ -70,24 +70,24 @@ export default function Skills() {
           {CATEGORIES.map(({ title, icon: Icon, skills }, idx) => (
             <ScrollReveal key={idx} delay={idx * 60}>
               <MagneticCard intensity={5}>
-              <div className="card-warm p-6 h-full">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="p-2 rounded-lg bg-surface-light">
-                    <Icon className="w-4 h-4 text-accent" />
+                <div className="card-warm p-6 h-full">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="p-2 rounded-lg bg-surface-light">
+                      <Icon className="w-4 h-4 text-accent" />
+                    </div>
+                    <h3 className="font-heading text-base font-semibold text-accent-cream">
+                      {title}
+                    </h3>
                   </div>
-                  <h3 className="font-heading text-base font-semibold text-accent-cream">
-                    {title}
-                  </h3>
-                </div>
 
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((skill, i) => (
-                    <span key={i} className="pill">
-                      {skill}
-                    </span>
-                  ))}
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((skill, i) => (
+                      <span key={i} className="pill">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
               </MagneticCard>
             </ScrollReveal>
           ))}

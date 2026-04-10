@@ -23,7 +23,7 @@ export default function Hero() {
           {/* Left — Intro */}
           <div className="order-2 md:order-1 relative">
             {/* Soft Glass Blob for Text/Icon Readability against the particle simulation */}
-            <div 
+            <div
               className="absolute -inset-12 -z-10 bg-[#06080a]/60 backdrop-blur-md rounded-[3rem] pointer-events-none"
               style={{
                 WebkitMaskImage: "radial-gradient(ellipse, black 30%, transparent 75%)",
@@ -47,7 +47,7 @@ export default function Hero() {
 
             <ScrollReveal delay={200}>
               <p className="mt-6 text-neutral-300 max-w-lg text-lg leading-relaxed drop-shadow-md">
-                Specializing in secure software development and malware analysis.
+                Specializing in secure software development.
                 Currently building at{" "}
                 <span className="text-accent-cream font-semibold">Kasm Workspaces, USA</span>.
                 Featured at DEFCON and RSA Conference.
